@@ -93,7 +93,8 @@ def fetch_historical_price():
     output_dir = dataset_dir / 'historical_price'
     output_dir.mkdir(exist_ok=True)
     for symbol in tqdm.tqdm(equity_df['symbol']):
-        ticker = f'{symbol}.BK'
+        ticker = f"{symbol.replace(' ', '-')}.BK"
         df = yfinance.download(ticker)
         df.to_csv(output_dir / f'{symbol}.csv')
+
 # %%
