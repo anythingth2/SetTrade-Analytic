@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import requests
 import tqdm
+import yfinance
 from bs4 import BeautifulSoup
 
 #%%
@@ -82,4 +83,17 @@ def scrap_equity_description():
     equity_df['market_cap'] = equity_df['market_cap'].astype(float)
 
     equity_df.to_csv(dataset_dir / 'thai_equity.csv', index=False)
+# %%
+
+def fetch_historical_price():
+    equity_df = pd.read_csv(dataset_dir / 'equity_list.csv')
+
+    symbol = equity_df['symbol']
+
+    output_dir = dataset_dir / 'historical_price'
+    output_dir.mkdir(exist_ok=True)
+    for symbol in tqdm.tqdm(equity_df['symbol']):
+        ticker = f'{symbol}.BK'
+        df = yfinance.download(ticker)
+        df.to_csv(output_dir / f'{symbol}.csv')
 # %%
